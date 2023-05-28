@@ -1,0 +1,1191 @@
+import java.util.*;
+
+public class SearchEngine {
+
+  private String[] sources; // 存放所有搜索源的名称
+
+  private String currentSource; // 当前使用的搜索源的名称
+
+  
+
+  // 设置搜索源
+
+  public void setSources(String[] sources) {
+
+    this.sources = sources;
+
+  }
+
+  
+
+  // 切换搜索源
+
+  public void switchSource(String source) {
+
+    if (Arrays.asList(this.sources).contains(source)) {
+
+      this.currentSource = source;
+
+      System.out.println("已切换到搜索源：" + source);
+
+    } else {
+
+      System.out.println("未找到指定的搜索源：" + source);
+
+    }
+
+  }
+
+  
+
+  // 搜索
+
+  public SearchResult[] search(String query) {
+
+    if (this.currentSource == null) {
+
+      return new SearchResult[] {};
+
+    }
+
+    
+
+    // 使用指定的搜索源进行搜索
+
+    // TODO: 实现搜索算法
+
+    
+
+    return new SearchResult[] {
+
+      new SearchResult("Title1", "Content1", "http://example.com/page1"),
+
+      new SearchResult("Title2", "Content2", "http://example.com/page2"),
+
+      new SearchResult("Title3", "Content3", "http://example.com/page3")
+
+    };
+
+  }
+
+}
+
+public class SearchResult {
+
+  private String title;
+
+  private String content;
+
+  private String url;
+
+  
+
+  // 构造函数
+
+  public SearchResult(String title, String content, String url) {
+
+    this.title = title;
+
+    this.content = content;
+
+    this.url = url;
+
+  }
+
+  
+
+  // 获取标题
+
+  public String getTitle() {
+
+    return this.title;
+
+  }
+
+  
+
+  // 获取内容
+
+  public String getContent() {
+
+    return this.content;
+
+  }
+
+  
+
+  // 获取链接
+
+  public String getUrl() {
+
+    return this.url;
+
+  }
+
+}
+
+ public class SearchEngine {
+
+  private String[] sources; // 所有搜索源的名称
+
+  
+
+  // 构造函数
+
+  public SearchEngine(String[] sources) {
+
+    this.sources = sources;
+
+  }
+
+  // 将所有搜索源的结果进行汇总爬取
+
+  public SearchResult[] searchAllSources(String query) {
+
+    List<SearchResult> result = new ArrayList<>();
+
+    for (String source : sources) {
+
+        // 使用当前搜索源进行搜索
+
+        SearchResult[] sourceResult = search(source, query);
+
+        
+
+        // 将搜索结果列表中的所有元素添加到总结果列表中
+
+        for (int i = 0; i < sourceResult.length; i++) {
+
+            result.add(sourceResult[i]);
+
+        }
+
+    }
+
+    return result.toArray(new SearchResult[result.size()]);
+
+  }
+
+  
+
+  // 搜索
+
+  public SearchResult[] search(String source, String query) {
+
+    // 使用指定的搜索源进行搜索
+
+    // TODO: 实现搜索算法
+
+    
+
+    return new SearchResult[] {
+
+      new SearchResult("Title1", "Content1", "http://example.com/page1"),
+
+      new SearchResult("Title2", "Content2", "http://example.com/page2"),
+
+      new SearchResult("Title3", "Content3", "http://example.com/page2")
+
+    };
+
+  }
+
+}
+
+ 
+
+public class SearchEngine {
+
+    private String[] sources;
+
+    private ExecutorService executor;
+
+    // 构造函数，传入所有搜索源
+
+    public SearchEngine(String[] sources) {
+
+        this.sources = sources;
+
+        // 创建一个线程池，最大线程数设置为搜索源的个数
+
+        executor = Executors.newFixedThreadPool(sources.length);
+
+    }
+
+    // 搜索所有数据
+
+    public SearchResult[] searchAllSources(String query) {
+
+        List<SearchResult> resultList = new ArrayList<>();
+
+        List<Future<SearchResult[]>> futureList = new ArrayList<>();
+
+        // 启动所有的搜索任务
+
+        for (String source : sources) {
+
+            Future<SearchResult[]> future = executor.submit(() -> search(source, query));
+
+            futureList.add(future);
+
+        }
+
+        // 获得所有搜索结果
+
+        for (Future<SearchResult[]> future : futureList) {
+
+            try {
+
+                SearchResult[] results = future.get();
+
+                for (SearchResult result : results) {
+
+                    resultList.add(result);
+
+                }
+
+            } catch (InterruptedException | ExecutionException e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+        // 关闭线程池，防止内存泄漏
+
+        executor.shutdown();
+
+        // 将结果转换为 SearchReuslt 数组
+
+        SearchResult[] resultArray = new SearchResult[resultList.size()];
+
+        return resultList.toArray(resultArray);
+
+    }
+
+    // 搜索
+
+    public SearchResult[] search(String source, String query) {
+
+        // 使用指定的搜索源进行搜索
+
+        // TODO: 实现搜索算法
+
+        return new SearchResult[]{
+
+                new SearchResult("Title1", "Content1", "http://example.com/page1"),
+
+                new SearchResult("Title2", "http://example.com/page2"),
+
+                new SearchResult("Title3", "Content3", "http://example.com/page2")
+
+        };
+
+    }
+
+}
+
+public class SearchEngine {
+
+    private List<SearchableSource> sources;
+
+    // 构造函数，初始化默认的搜索源
+
+    public SearchEngine() {
+
+        sources = new ArrayList<>();
+
+        sources.add(new GoogleSearchSource());
+
+        sources.add(new BingSearchSource());
+
+    }
+
+    // 鉴定用户身份，验证用户是否有添加自定义搜索源的权限
+
+    public boolean authenticateUser(String userName, String password) {
+
+        // TODO: 执行用户身份验证
+
+        return true;
+
+    }
+
+    // 添加自定义搜索源
+
+    public void addCustomSource(String name, String url, String userName, String password) {
+
+        // 鉴定用户身份
+
+        if (!authenticateUser(userName, password)) {
+
+            System.out.println("身份验证失败，请检查用户名和密码是否正确。");
+
+            return;
+
+        }
+
+         // 创建自定义搜索源对象，将其添加到搜索源列表中
+
+        CustomSearchSource customSource = new CustomSearchSource(name, url);
+
+        sources.add(customSource);
+
+        System.out.println("已添加自定义搜索源：" + name);
+
+    }
+
+    // 搜索所有源
+
+    public SearchResult[] searchAllSources(String query) {
+
+        List<SearchResult> resultList = new ArrayList<>();
+
+        List<Future<SearchResult[]>> futureList = new ArrayList<>();
+
+        // 启动所有的搜索任务
+
+        for (SearchableSource source : sources) {
+
+            Future<SearchResult[]> future = source.search(query);
+
+            futureList.add(future);
+
+        }
+
+        // 获得所有搜索结果
+
+        for (Future<SearchResult[]> future : futureList) {
+
+            try {
+
+                SearchResult[] results = future.get();
+
+                for (SearchResult result : results) {
+
+                    resultList.add(result);
+
+                }
+
+            } catch (InterruptedException | ExecutionException e) {
+
+                e.printStackTrace();
+
+            }
+
+ }
+
+        // 将结果转换为 SearchResult 数组
+
+        SearchResult[] resultArray = new SearchResult[resultList.size()];
+
+        return resultList.toArray(resultArray);
+
+    }
+
+}
+
+ 
+
+import java.awt.EventQueue;
+
+import java.awt.GridBagConstraints;
+
+import java.awt.GridBagLayout;
+
+import javax.swing.JButton;
+
+import javax.swing.JCheckBox;
+
+import javax.swing.JComboBox;
+
+import javax.swing.JFrame;
+
+import javax.swing.JLabel;
+
+import javax.swing.JPanel;
+
+import javax.swing.JScrollPane;
+
+import javax.swing.JTextArea;
+
+import javax.swing.JTextField;
+
+public class SearchUI {
+
+    private JFrame frame;
+
+    private JTextField queryTextField;
+
+    private JComboBox<String> sourceComboBox;
+
+    private JCheckBox optimizeCheckBox;
+
+    private JComboBox<String> algorithmComboBox;
+
+    private JButton searchButton;
+
+    private JTextArea resultTextArea;
+
+    // 构造函数，创建 UI
+
+    public SearchUI() {
+
+        initialize();
+
+    }
+
+    // 初始化 UI
+
+    private void initialize() {
+
+        frame = new JFrame("Search Engine");
+
+        frame.setBounds(100, 100, 800, 600);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        frame.getContentPane().add(panel);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        constraints.gridx = 0;
+
+        constraints.gridy = 0;
+
+        constraints.anchor = GridBagConstraints.LINE_END;
+
+        panel.add(new JLabel("Search Query: "), constraints);
+
+        queryTextField = new JTextField(40);
+
+        constraints.gridx = 1;
+
+        constraints.anchor = GridBagConstraints.LINE_START;
+
+        panel.add(queryTextField, constraints);
+
+        constraints.gridx = 0;
+
+        constraints.gridy = 1;
+
+        constraints.anchor = GridBagConstraints.LINE_END;
+
+        panel.add(new JLabel("Search Source: "), constraints);
+
+        String[] sources = {"Google", "Bing", "Custom"};
+
+        sourceComboBox = new JComboBox<>(sources);
+
+        constraints.gridx = 1;
+
+        constraints.anchor = GridBagConstraints.LINE_START;
+
+        panel.add(sourceComboBox, constraints);
+
+        optimizeCheckBox = new JCheckBox("Optimize Search");
+
+        constraints.gridx = 0;
+
+        constraints.gridy = 2;
+
+        panel.add(optimizeCheckBox, constraints);
+
+        String[] algorithms = {"Default", "Keyword Match", "Semantic Relevance", "Result Re-ordering", "Fuzzy Search"};
+
+        algorithmComboBox = new JComboBox<>(algorithms);
+
+        algorithmComboBox.setSelectedIndex(0);
+
+        constraints.gridx = 1;
+
+        constraints.gridy = 2;
+
+        panel.add(algorithmComboBox, constraints);
+
+        searchButton = new JButton("Search");
+
+        constraints.gridx = 0;
+
+        constraints.gridy = 3;
+
+        constraints.anchor = GridBagConstraints.LINE_END;
+
+        panel.add(searchButton, constraints);
+
+        resultTextArea = new JTextArea(30, 60);
+
+        resultTextArea.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(resultTextArea);
+
+        constraints.gridy = 4;
+
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+
+        constraints.anchor = GridBagConstraints.CENTER;
+
+        panel.add(scrollPane, constraints);
+
+        searchButton.addActionListener(e -> performSearch());
+
+        frame.setVisible(true);
+
+    }
+
+    // 处理搜索事件
+
+    private void performSearch() {
+
+        String query = queryTextField.getText();
+
+        String source = (String) sourceComboBox.getSelectedItem();
+
+        SearchEngine searchEngine = new SearchEngine();
+
+        SearchResult[] results;
+
+        if (source.equals("Google")) {
+
+            results = searchEngine.search("Google", query);
+
+        } else if (source.equals("Bing")) {
+
+            results = searchEngine.search("Bing", query);
+
+        } else {
+
+            // 自定义源需要用户输入用户名和密码
+
+            String userName = "username";
+
+            String password = "password";
+
+            searchEngine.addCustomSource("Custom", "http://localhost:8080/custom", userName, password);
+
+            results = searchEngine.search("Custom", query);
+
+        }
+
+        // 根据用户选择的搜索算法来决定搜索行为
+
+        String algorithm = (String) algorithmComboBox.getSelectedItem();
+
+        if (algorithm.equals("Keyword Match")) {
+
+            // 利用关键字对结果进行排序
+
+            // TODO: 实现关键字匹配算法
+
+        } else if (algorithm.equals("Semantic Relevance")) {
+
+            // 根据文本语义相关性对结果进行排序
+
+            // TODO: 实现文本相似度匹配算法
+
+        } else if (algorithm.equals("Result Re-ordering")) {
+
+            // 重新排列结果集
+
+            // TODO: 实现结果集重排序算法
+
+        } else if (algorithm.equals("Fuzzy Search")) {
+
+            // 使用模糊搜索算法
+
+            // TODO: 实现模糊搜索算法
+
+        }
+
+        // 显示搜索结果
+
+        displayResults(results);
+
+    }
+
+    // 显示搜索结果的一般方法
+
+    private void displayResults(SearchResult[] results) {
+
+        resultTextArea.setText("");
+
+        for (int i = 0; i < results.length; i++) {
+
+            resultTextArea.append(results[i].getTitle() + "\n" + results[i].getUrl() + "\n\n");
+
+        }
+
+    }
+
+    public
+
+ 
+
+private void performSearch() {
+
+    // 创建 SearchEngine 对象
+
+    SearchEngine searchEngine = new SearchEngine();
+
+    // 从 UI 获取搜索词和搜索源
+
+    String query = queryTextField.getText();
+
+    String source = (String) sourceComboBox.getSelectedItem();
+
+    SearchResult[] results = null;
+
+    // 根据搜索源执行搜索
+
+    if (source.equals("Google")) {
+
+        results = searchEngine.search("Google", query);
+
+    } else if (source.equals("Bing")) {
+
+        results = searchEngine.search("Bing", query);
+
+    } else {
+
+        // 自定义源需要用户输入用户名和密码
+
+        String userName = "username";
+
+        String password = "password";
+
+        searchEngine.addCustomSource("Custom", "http://localhost:8080/custom", userName, password);
+
+        results = searchEngine.search("Custom", query);
+
+    }
+
+    // 更新文本区域以显示搜索结果
+
+    resultTextArea.setText("");
+
+    for (int i = 0; i < results.length; i++) {
+
+        resultTextArea.append(results[i].getTitle() + "\n" + results[i].getUrl() + "\n\n");
+
+    }
+
+}
+
+ 
+
+// 在 UI 中添加一个表格来显示搜索结果
+
+resultTable = new JTable();
+
+resultTableModel = new DefaultTableModel();
+
+resultTable.setModel(resultTableModel);
+
+// 将表格添加到滚动窗格中
+
+JScrollPane scrollPane = new JScrollPane(resultTable);
+
+// 将滚动窗格添加到面板中
+
+constraints.gridy = 4;
+
+constraints.gridwidth = GridBagConstraints.REMAINDER;
+
+constraints.anchor = GridBagConstraints.CENTER;
+
+panel.add(scrollPane, constraints);
+
+// 将搜索结果数组转换为表格数据模型
+
+private Object[][] toTableModel(SearchResult[] results) {
+
+    Object[][] tableModel = new Object[results.length][2];
+
+    for (int i = 0; i < results.length; i++) {
+
+        tableModel[i][0] = results[i].getTitle();
+
+        tableModel[i][1] = results[i].getUrl();
+
+    }
+
+    return tableModel;
+
+}
+
+// 更新表格以显示搜索结果
+
+resultTableModel.setDataVector(toTableModel(results), new Object[] {"Title", "URL"});
+
+ 
+
+ 
+
+// 定义 Model 类
+
+public class SearchModel {
+
+    private SearchResult[] results;
+
+    // 搜索方法
+
+    public void search(String source, String query) {
+
+        // ...
+
+    }
+
+    // 获取搜索结果
+
+    public SearchResult[] getResults() {
+
+        return results;
+
+    }
+
+}
+
+// 定义 View 类
+
+public class SearchView {
+
+    private JTable resultTable;
+
+    private DefaultTableModel resultTableModel;
+
+    // 构造函数
+
+    public SearchView() {
+
+        // 初始化 ResultTable 和 ResultTableModel
+
+        resultTable = new JTable();
+
+        resultTableModel = new DefaultTableModel();
+
+        resultTable.setModel(resultTableModel);
+
+        // 添加 ResultTable 到 JScrollPane
+
+        JScrollPane scrollPane = new JScrollPane(resultTable);
+
+        // 添加 JScrollPane 到面板
+
+        // ...
+
+    }
+
+    // 更新表格以显示搜索结果
+
+    public void updateTable(SearchResult[] results) {
+
+        resultTableModel.setDataVector(toTableModel(results), new Object[] {"Title", "URL"});
+
+    }
+
+    // 将搜索结果数组转换为表格数据模型
+
+    private Object[][] toTableModel(SearchResult[] results) {
+
+        // ...
+
+    }
+
+    // 获取搜索框中的搜索词和搜索源
+
+    public String getQuery() {
+
+        // ...
+
+    }
+
+    public String getSource() {
+
+        // ...
+
+    }
+
+}
+
+// 定义 Controller 类
+
+public class SearchController {
+
+    private SearchModel model;
+
+    private SearchView view;
+
+    // 构造函数
+
+    public SearchController(SearchModel model, SearchView view) {
+
+        this.model = model;
+
+        this.view = view;
+
+        // 注册监听器
+
+        // ...
+
+    }
+
+    // 开始搜索
+
+    private void startSearch() {
+
+        String source = view.getSource();
+
+        String query = view.getQuery();
+
+        model.search(source, query);
+
+        SearchResult[] results model.getResults();
+
+        viewTable(results);
+
+    }
+
+}
+
+ 
+
+// 执行搜索
+
+private void performSearch() {
+
+    // 创建 SearchEngine 对象
+
+    SearchEngine searchEngine = new SearchEngine();
+
+    // 从 UI 获取搜索词和搜索源
+
+    String query = queryTextField.getText();
+
+    String source = (String) sourceComboBox.getSelectedItem();
+
+    SearchResult[] results = null;
+
+    // 根据搜索源执行搜索
+
+    if (source.equals("Google")) {
+
+        results = searchEngine.searchGoogle(query);
+
+    } else if (source.equals("Bing")) {
+
+        results = searchEngine.searchBing(query);
+
+    } else {
+
+        String userName = "username";
+
+        String password = "password";
+
+        searchEngine.addCustomSource("Custom", "http://localhost:8080/custom", userName, password);
+
+        results = searchEngine.searchCustom(query);
+
+    }
+
+    // 支持排序功能
+
+    if (sortCheckBox.isSelected() && !results.isEmpty()) {
+
+        Arrays.sort(results);
+
+    }
+
+    // 支持筛选功能
+
+    String filter = filterTextField.getText();
+
+    if (!filter.isEmpty() && !results.isEmpty()) {
+
+        List<SearchResult> filteredResults = new ArrayList<>();
+
+        for (SearchResult result : results) {
+
+            if (result.getTitle().contains(filter) || result.getUrl().contains(filter)) {
+
+                filteredResults.add(result);
+
+            }
+
+        }
+
+        results = filteredResults.toArray(new SearchResult[0]);
+
+    }
+
+    // 更新表格以显示搜索结果
+
+    if (!results.isEmpty()) {
+
+        updateTable(results);
+
+    } else {
+
+        JOptionPane.showMessageDialog(this, "No results found.");
+
+    }
+
+}
+
+// 将数组保存到 JSON 文件
+
+private void saveResults(SearchResult[] results, String query) {
+
+    try {
+
+        File file = new File(query + ".json");
+
+        if (!file.exists()) {
+
+            file.createNewFile();
+
+        }
+
+        FileWriter writer = new FileWriter(file.getAbsoluteFile());
+
+        writer.write(gson.toJson(results));
+
+        writer.close();
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+    }
+
+}
+
+// 从 JSON 文件中加载数组
+
+private SearchResult[] loadResults(String query) {
+
+    try {
+
+        File file = new File(query + ".json");
+
+        if (file.exists()) {
+
+            String content = new String(Files.readAllBytes(file.toPath()));
+
+            SearchResult[] results = gson.fromJson(content, SearchResult[].class);
+
+            return results;
+
+        }
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+    }
+
+    return null;
+
+}
+
+// 执行搜索，查看缓存是否存在
+
+private void performSearch() {
+
+    // 从 UI 中获取搜索词和搜索源
+
+    String query = queryTextField.getText();
+
+    String source = (String) sourceComboBox.getSelectedItem();
+
+    SearchResult[] results = null;
+
+    // 检查缓存是否存在
+
+    SearchResult[] cachedResults = loadResults(query);
+
+    if (cachedResults != null) {
+
+        results = cachedResults;
+
+    } else {
+
+        // 如果缓存不存在，则在线搜索数据
+
+        SearchEngine searchEngine = new SearchEngine();
+
+        if (source.equals("Google")) {
+
+            results = searchEngine.searchGoogle(query);
+
+        } else if (source.equals("Bing")) {
+
+            results = searchEngine.searchBing(query);
+
+        } else {
+
+            searchEngine.addCustomSource("Custom", "http://localhost:8080/custom", "username", "password");
+
+            results = searchEngine.searchCustom(query);
+
+        }
+
+        // 保存结果到 JSON 文件
+
+        saveResults(results, query);
+
+    }
+
+    // 更新表格以显示搜索结果
+
+    if (results != null && results.length > 0) {
+
+        updateTable(results);
+
+    } else {
+
+        JOptionPane.showMessageDialog(this, "No results found.");
+
+    }
+
+}
+
+ public class WordCount {
+
+public static void main(String[] args) throws Exception {
+
+Configuration conf = new Configuration();
+
+Job job = Job.getInstance(conf, "word count");
+
+job.setJarByClass(WordCount.class);
+
+job.setMapperClass(TokenizerMapper.class);
+
+job.setCombinerClass(IntSumReducer.class);
+
+job.setReducerClass(IntSumReducer.class);
+
+job.setOutputKeyClass(Text.class);
+
+job.setOutputValueClass(IntWritable.class);
+
+FileInputFormat.addInputPath(job, new Path(args[0]));
+
+FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+System.exit(job.waitForCompletion(true) ? 0 : 1);
+
+} } 
+
+val inputFile = "hdfs://input.txt" val outputFile = "hdfs://output.txt" val conf = new SparkConf().setAppName("wordCountSpark").setMaster("spark://master:7077") val sc = new SparkContext(conf) val input = sc.textFile(inputFile) val words = input.flatMap(line => line.split(" ")) val counts = words.map(word => (word, 1)).reduceByKey { case (x, y) => x + y } counts.saveAsTextFile(outputFile)
+
+Document doc = Jsoup.connect("http://example.com/").get(); String title = doc.title(); Elements newsHeadlines = doc.select("#mp-itn b a"); 
+
+CloseableHttpClient httpClient = HttpClients.createDefault(); HttpGet httpGet = new HttpGet("http://www.example.com"); CloseableHttpResponse response = httpClient.execute(httpGet); HttpEntity entity = response.getEntity(); String content = EntityUtils.toString(entity);
+
+HttpURLConnection connection = (HttpURLConnection) url.openConnection(); connection.setRequestMethod("GET"); connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36"); 
+
+CloseableHttpClient httpClient = HttpClients.createDefault(); HttpHost proxy = new HttpHost("127.0.0.1", 1080); RequestConfig config = RequestConfig.custom().setProxy(proxy).build(); HttpGet httpGet = new HttpGet("http://www.example.com"); httpGet.setConfig(config); CloseableHttpResponse response = httpClient.execute(httpGet); 
+
+File imageFile = new File("captcha.jpg"); ImageIO.write(bufferedImage, "jpg imageFile);
+
+try {
+
+    Configuration conf = new Configuration();
+
+    Job job = Job.getInstance(conf, "word count");
+
+    
+
+    // ...其他配置
+
+} catch (Exception e) {
+
+    e.printStackTrace();
+
+}
+
+try {
+
+    val inputFile = "hdfs://.txt" 
+
+    val outputFile = "hdfs://output.txt" 
+
+    val conf = new SparkConf().setAppName("wordCountSpark").setMaster("spark://master:7077") 
+
+    val sc = new SparkContext(conf) 
+
+    val input = sc.textFile(inputFile) 
+
+    val words = input.flatMap(line => line.split(" ")) 
+
+    val counts = words.map(word => (word, 1)).reduceByKey { casex, y) => x + y } 
+
+    counts.saveAsTextFile(outputFile)
+
+} catch {
+
+    case e: Exception => e.printStackTrace()
+
+}
+
+DistributedCache.addCacheFile(new URI("/path/to/cache-file"), conf);
+
+val items = sc.textFile("hdfs://path/to/items.txt").collect()
+
+val broadcastItems = sc.broadcast(items)
+
+spark-submit --num-executors 100 your-app.jar
+
+PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+
+CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(cm).build();
+
+HttpGet httpGet = new HttpGet("http://www.example.com");
+
+CloseableHttpResponse response = httpClient.execute(httpGet);
+
+HttpEntity entity = response.getEntity();
+
+String content = EntityUtils.toString(entity);
+
+CloseableHttpClient httpClient = HttpClients.createDefault();
+
+RequestConfig config = RequestConfig.custom()
+
+                                 .setConnectTimeout(5000)
+
+                                 .setSocketTimeout(5000)
+
+                                 .build();
+
+HttpGet httpGet = new HttpGet("http://www.example.com");
+
+httpGet.setConfig(config);
+
+CloseableHttpResponse response = httpClient.execute(httpGet);
+
+String[] userAgents = {
+
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)",
+
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.8) Gecko/2009032609 Firefox/3.0.8",
+
+    "Opera/9.80 (Windows NT 5.1; U; en) Presto/2.2.15 Version/10.00"
+
+};
+
+Random random = new Random();
+
+String userAgent = userAgents[random.nextInt(userAgents.length)];
+
+CloseableHttpClient client = HttpClients.createDefault();
+
+HttpGet httpGet = new HttpGet("http://www.example.com");
+
+httpGet.setHeader("User-Agent", userAgent);
+
+CloseableHttpResponse response = client.execute(httpGet);
